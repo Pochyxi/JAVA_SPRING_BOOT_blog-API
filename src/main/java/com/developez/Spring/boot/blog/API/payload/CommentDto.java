@@ -4,9 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class PostDto {
+@Builder
+public class CommentDto {
     private Long id;
-    private String title;
-    private String description;
-    private String content;
+
+    private String name;
+
+    private String email;
+
+    private String body;
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,11 +39,16 @@ public class PostServiceImpl implements PostService {
     }
 
     // Recupero di tutti i Post con paginazione e oggetto PostResponse
+    // Utilizzo del sorting
+    // Utilizzo di sort direction
     @Override
-    public PostResponse getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+        // creazione di un oggetto Sort
+        Sort sort = sortDir.equalsIgnoreCase( Sort.Direction.ASC.name() ) ? Sort.by( sortBy ).ascending()
+                : Sort.by( sortBy ).descending();
 
         // creazione di un oggetto Pageable
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of( pageNo, pageSize, sort );
 
         Page<Post> postPageList = postRepository.findAll(pageable);
 
