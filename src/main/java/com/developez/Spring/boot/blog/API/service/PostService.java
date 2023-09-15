@@ -3,8 +3,6 @@ package com.developez.Spring.boot.blog.API.service;
 import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;
 
-import java.util.List;
-
 public interface PostService {
 
     PostDto createPost( PostDto postDto );

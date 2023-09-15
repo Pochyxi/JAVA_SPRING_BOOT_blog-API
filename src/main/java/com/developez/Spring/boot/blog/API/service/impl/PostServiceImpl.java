@@ -6,6 +6,7 @@ import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;
 import com.developez.Spring.boot.blog.API.repository.PostRepository;
 import com.developez.Spring.boot.blog.API.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +21,13 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
+    private ModelMapper mapper;
+
     @Autowired
-    public PostServiceImpl( PostRepository postRepository ) {
+    public PostServiceImpl( PostRepository postRepository, ModelMapper mapper ) {
+
         this.postRepository = postRepository;
+        this.mapper = mapper;
     }
 
     // Creazione di un Post
@@ -102,21 +107,15 @@ public class PostServiceImpl implements PostService {
 
     // Convertire l'ENTITY in DTO
     private PostDto mapToDTO( Post post ) {
-        PostDto postDto = new PostDto();
-        postDto.setId( post.getId() );
-        postDto.setTitle( post.getTitle() );
-        postDto.setDescription( post.getDescription() );
-        postDto.setContent( post.getContent() );
+        PostDto postDto = mapper.map( post, PostDto.class );
+
         return postDto;
     }
 
     // Convertire il DTO in ENTITY
     private Post mapToEntity( PostDto postDto ) {
-        Post post = new Post();
-        post.setId( postDto.getId() );
-        post.setTitle( postDto.getTitle() );
-        post.setDescription( postDto.getDescription() );
-        post.setContent( postDto.getContent() );
+        Post post = mapper.map( postDto, Post.class );
+
         return post;
     }
 }

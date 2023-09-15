@@ -1,14 +1,13 @@
 package com.developez.Spring.boot.blog.API.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
@@ -20,25 +19,25 @@ public class Post {
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
-    public Long id;
+    private Long id;
 
     @Column(
             name = "title",
             nullable = false
     )
-    public String title;
+    private String title;
 
     @Column(
             name = "description",
             nullable = false
     )
-    public String description;
+    private String description;
 
     @Column(
             name = "content",
             nullable = false
     )
-    public String content;
+    private String content;
 
     @OneToMany(
             mappedBy = "post",
