@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +23,10 @@ public class PostController {
     }
 
     // Creazione di un Post
+    @PreAuthorize( "hasRole('ADMIN')" )
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto ){
-        return new ResponseEntity( postService.createPost( postDto ), HttpStatus.CREATED );
+        return new ResponseEntity<>( postService.createPost( postDto ), HttpStatus.CREATED );
     }
 
     // Recupero di tutti i Post con paginazione e oggetto PostResponse
@@ -48,6 +50,7 @@ public class PostController {
     }
 
     // Aggiornamento di un Post tramite ID
+    @PreAuthorize( "hasRole('ADMIN')" )
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable("id") Long id ){
         return new ResponseEntity<>( postService.updatePost( postDto, id ), HttpStatus.OK );
@@ -55,7 +58,8 @@ public class PostController {
 
     // Eliminazione di un Post tramite ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePostById( @PathVariable("id") Long id ){
+    @PreAuthorize( "hasRole('ADMIN')" )
+    public ResponseEntity<String> deletePostById( @PathVariable("id") Long id ){
         postService.deletePostById( id );
         return new ResponseEntity<>( "Post eliminato con successo.", HttpStatus.OK );
     }
