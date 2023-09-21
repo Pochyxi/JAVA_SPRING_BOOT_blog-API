@@ -33,7 +33,7 @@ public class GlobalExecptionHandler extends ResponseEntityExceptionHandler {
                                                                 WebRequest webRequest ) {
         ErrorDetails errorDetails = new ErrorDetails( new Date(), exception.getMessage(),
                 webRequest.getDescription( false ) );
-        return new ResponseEntity<>( errorDetails, HttpStatus.NOT_FOUND );
+        return new ResponseEntity<>( errorDetails, HttpStatus.BAD_REQUEST );
     }
 
     @ExceptionHandler(Exception.class)

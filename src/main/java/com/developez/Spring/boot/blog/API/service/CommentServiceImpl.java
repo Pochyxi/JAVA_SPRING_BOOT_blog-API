@@ -1,4 +1,4 @@
-package com.developez.Spring.boot.blog.API.service.impl;
+package com.developez.Spring.boot.blog.API.service;
 
 import com.developez.Spring.boot.blog.API.entity.Comment;
 import com.developez.Spring.boot.blog.API.entity.Post;
@@ -7,13 +7,12 @@ import com.developez.Spring.boot.blog.API.exception.ResourceNotFoundException;
 import com.developez.Spring.boot.blog.API.payload.CommentDto;
 import com.developez.Spring.boot.blog.API.repository.CommentRepository;
 import com.developez.Spring.boot.blog.API.repository.PostRepository;
-import com.developez.Spring.boot.blog.API.service.CommentService;
+import com.developez.Spring.boot.blog.API.service.impl.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 

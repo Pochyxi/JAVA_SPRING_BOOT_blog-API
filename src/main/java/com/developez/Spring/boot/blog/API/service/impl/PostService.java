@@ -1,4 +1,4 @@
-package com.developez.Spring.boot.blog.API.service;
+package com.developez.Spring.boot.blog.API.service.impl;
 
 import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;

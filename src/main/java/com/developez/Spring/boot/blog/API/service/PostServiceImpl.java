@@ -1,11 +1,11 @@
-package com.developez.Spring.boot.blog.API.service.impl;
+package com.developez.Spring.boot.blog.API.service;
 
 import com.developez.Spring.boot.blog.API.entity.Post;
 import com.developez.Spring.boot.blog.API.exception.ResourceNotFoundException;
 import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;
 import com.developez.Spring.boot.blog.API.repository.PostRepository;
-import com.developez.Spring.boot.blog.API.service.PostService;
+import com.developez.Spring.boot.blog.API.service.impl.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
