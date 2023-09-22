@@ -1,7 +1,7 @@
 package com.developez.Spring.boot.blog.API.controller;
 
 import com.developez.Spring.boot.blog.API.payload.CommentDto;
-import com.developez.Spring.boot.blog.API.service.impl.CommentService;
+import com.developez.Spring.boot.blog.API.service.CommentService;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

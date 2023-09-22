@@ -2,7 +2,7 @@ package com.developez.Spring.boot.blog.API.controller;
 
 import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;
-import com.developez.Spring.boot.blog.API.service.impl.PostService;
+import com.developez.Spring.boot.blog.API.service.PostService;
 import com.developez.Spring.boot.blog.API.utils.AppConstants;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

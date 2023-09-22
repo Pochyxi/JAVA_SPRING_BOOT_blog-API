@@ -1,8 +1,9 @@
 package com.developez.Spring.boot.blog.API.controller;
 
+import com.developez.Spring.boot.blog.API.payload.JwtAuthResponse;
 import com.developez.Spring.boot.blog.API.payload.LoginDto;
 import com.developez.Spring.boot.blog.API.payload.SignupDto;
-import com.developez.Spring.boot.blog.API.service.impl.AuthService;
+import com.developez.Spring.boot.blog.API.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,13 @@ public class AuthController {
 
     // Costruzione della login REST API
     @PostMapping(value = {"/login", "/signing"})
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto ) {
-        String response = authService.Login( loginDto );
+    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto ) {
+        String token = authService.Login( loginDto );
 
-        return ResponseEntity.ok( response );
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken( token );
 
+        return new ResponseEntity<>( jwtAuthResponse, HttpStatus.OK );
     }
 
     // Costruzione della signup REST API

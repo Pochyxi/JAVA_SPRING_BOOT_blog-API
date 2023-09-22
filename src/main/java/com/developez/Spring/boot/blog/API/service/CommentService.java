@@ -1,4 +1,4 @@
-package com.developez.Spring.boot.blog.API.service.impl;
+package com.developez.Spring.boot.blog.API.service;
 
 import com.developez.Spring.boot.blog.API.payload.CommentDto;
 

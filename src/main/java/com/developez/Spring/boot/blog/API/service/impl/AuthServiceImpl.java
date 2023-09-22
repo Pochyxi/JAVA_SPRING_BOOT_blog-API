@@ -1,5 +1,6 @@
-package com.developez.Spring.boot.blog.API.service;
+package com.developez.Spring.boot.blog.API.service.impl;
 
+import com.developez.Spring.boot.blog.API.Security.JwtTokenProvider;
 import com.developez.Spring.boot.blog.API.entity.Role;
 import com.developez.Spring.boot.blog.API.entity.User;
 import com.developez.Spring.boot.blog.API.exception.BlogAPIException;
@@ -7,7 +8,7 @@ import com.developez.Spring.boot.blog.API.payload.LoginDto;
 import com.developez.Spring.boot.blog.API.payload.SignupDto;
 import com.developez.Spring.boot.blog.API.repository.RoleRepository;
 import com.developez.Spring.boot.blog.API.repository.UserRepository;
-import com.developez.Spring.boot.blog.API.service.impl.AuthService;
+import com.developez.Spring.boot.blog.API.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,21 +25,24 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public AuthServiceImpl(
             AuthenticationManager authenticationManager,
             UserRepository userRepository,
             RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            JwtTokenProvider jwtTokenProvider
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -48,9 +52,11 @@ public class AuthServiceImpl implements AuthService {
                 authenticationManager.authenticate( new UsernamePasswordAuthenticationToken( loginDto.getUsernameOrEmail(),
                 loginDto.getPassword() ) );
 
+        // Impostare l'oggetto di autenticazione
         SecurityContextHolder.getContext().setAuthentication( authentication );
 
-        return "Login effettuato con successo";
+        // Generazione del token JWT
+        return jwtTokenProvider.generateToken( authentication );
     }
 
     @Override
