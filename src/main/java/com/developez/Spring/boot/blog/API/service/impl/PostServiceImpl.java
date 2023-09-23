@@ -1,9 +1,11 @@
 package com.developez.Spring.boot.blog.API.service.impl;
 
+import com.developez.Spring.boot.blog.API.entity.Category;
 import com.developez.Spring.boot.blog.API.entity.Post;
 import com.developez.Spring.boot.blog.API.exception.ResourceNotFoundException;
 import com.developez.Spring.boot.blog.API.payload.PostDto;
 import com.developez.Spring.boot.blog.API.payload.PostResponse;
+import com.developez.Spring.boot.blog.API.repository.CategoryRepository;
 import com.developez.Spring.boot.blog.API.repository.PostRepository;
 import com.developez.Spring.boot.blog.API.service.PostService;
 import org.modelmapper.ModelMapper;
@@ -21,26 +23,38 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper modelMapper;
+
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public PostServiceImpl( PostRepository postRepository, ModelMapper mapper ) {
+    public PostServiceImpl( PostRepository postRepository,
+                            ModelMapper mapper,
+                            CategoryRepository categoryRepository) {
 
         this.postRepository = postRepository;
-        this.mapper = mapper;
+        this.modelMapper = mapper;
+        this.categoryRepository = categoryRepository;
     }
 
     // Creazione di un Post
     @Override
     public PostDto createPost( PostDto postDto ) {
+
+        Category category = categoryRepository.findById( postDto.getCategoryId() )
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId()));
+
         // Convertire il DTO in ENTITY
-        Post post = mapToEntity( postDto );
+        Post post = modelMapper.map( postDto, Post.class );
+
+        // Settare la Category
+        post.setCategory( category );
 
         // Salvare l'ENTITY nel DB
         Post savedPost = postRepository.save( post );
 
         // Convertire l'ENTITY in DTO
-        return mapToDTO( savedPost );
+        return modelMapper.map( savedPost, PostDto.class );
     }
 
     // Recupero di tutti i Post con paginazione e oggetto PostResponse
@@ -60,7 +74,7 @@ public class PostServiceImpl implements PostService {
         // prendere il contenuto dal dall'oggetto Page
         List<Post> postList = postPageList.getContent();
 
-        List<PostDto> content = postList.stream().map( this::mapToDTO ).toList();
+        List<PostDto> content = postList.stream().map( post -> modelMapper.map( post, PostDto.class ) ).toList();
 
         PostResponse postResponse = new PostResponse();
         postResponse.setContent( content );
@@ -77,7 +91,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto getPostById( Long id ) {
         Post post = postRepository.findById( id ).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-        return mapToDTO( post );
+        return modelMapper.map( post, PostDto.class );
     }
 
     // Aggiornamento di un Post tramite ID
@@ -86,13 +100,19 @@ public class PostServiceImpl implements PostService {
         // Recupero l'ENTITY dal DB tramite ID
         Post post = postRepository.findById( id ).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
 
+        // Recupero la Category dal DB tramite ID
+        Category category = categoryRepository.findById( postDto.getCategoryId() )
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId()));
+
         post.setTitle( postDto.getTitle() );
         post.setDescription( postDto.getDescription() );
         post.setContent( postDto.getContent() );
+        // Settare la Category
+        post.setCategory( category );
 
         // Salvare l'ENTITY nel DB
         Post updatedPost = postRepository.save( post );
-        return mapToDTO( updatedPost );
+        return modelMapper.map( updatedPost, PostDto.class );
     }
 
     // Eliminazione di un Post tramite ID
@@ -105,17 +125,15 @@ public class PostServiceImpl implements PostService {
         postRepository.delete( post );
     }
 
-    // Convertire l'ENTITY in DTO
-    private PostDto mapToDTO( Post post ) {
-        PostDto postDto = mapper.map( post, PostDto.class );
+    @Override
+    public List<PostDto> getAllPostsByCategoryId( Long categoryId ) {
 
-        return postDto;
+        Category category = categoryRepository.findById( categoryId )
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+
+        List<Post> postList = postRepository.findAllByCategoryId( category.getId() );
+
+        return postList.stream().map( post -> modelMapper.map( post, PostDto.class ) ).toList();
     }
 
-    // Convertire il DTO in ENTITY
-    private Post mapToEntity( PostDto postDto ) {
-        Post post = mapper.map( postDto, Post.class );
-
-        return post;
-    }
 }
